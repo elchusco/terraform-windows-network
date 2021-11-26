@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceRecordA() *schema.Resource {
@@ -63,9 +63,9 @@ func createRecordA(d *schema.ResourceData, m interface{}) error {
 	ptr := d.Get("ptr").(string)
 
 	if ptr != "" {
-		ptrArr, lastByteArr := computePtrAndLastByte(ptr, ip)	
+		ptrArr, lastByteArr := computePtrAndLastByte(ptr, ip)
 		err = c.AddDNSRecordPTR(zone, ip, name, ptrArr, lastByteArr)
-	}	
+	}
 
 	return err
 }
@@ -92,12 +92,12 @@ func deleteRecordA(d *schema.ResourceData, m interface{}) error {
 	ptr := d.Get("ptr").(string)
 
 	if ptr != "" {
-		ptrArr, lastByteArr := computePtrAndLastByte(ptr, ip)	
+		ptrArr, lastByteArr := computePtrAndLastByte(ptr, ip)
 		err := c.RemoveDNSRecordPTR(ptrArr, lastByteArr)
 		if err != nil {
 			return err
 		}
-	}	
+	}
 
 	return c.RemoveDNSRecordA(d.Get("zone").(string), ip, d.Get("name").(string))
 }

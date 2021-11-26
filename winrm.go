@@ -224,7 +224,7 @@ func (c *Communicator) RemoveDNSRecordCname(zone string, alias string, name stri
 }
 
 func (c *Communicator) AddDNSRecordPTR(zone string, ip net.IP, name string, ptrArr []string, lastByteArr []string) error {
-	
+
 	ptrdomainname := name + "." + zone
 
 	for i, j := 0, len(ptrArr)-1; i < j; i, j = i+1, j-1 {
@@ -235,9 +235,9 @@ func (c *Communicator) AddDNSRecordPTR(zone string, ip net.IP, name string, ptrA
 		lastByteArr[i], lastByteArr[j] = lastByteArr[j], lastByteArr[i]
 	}
 
-	lastByte := strings.Join(lastByteArr,".")
+	lastByte := strings.Join(lastByteArr, ".")
 
-	zonename := strings.Join(ptrArr,".") + ".in-addr.arpa"
+	zonename := strings.Join(ptrArr, ".") + ".in-addr.arpa"
 
 	command := fmt.Sprintf(
 		"Add-DnsServerResourceRecordPtr -Name \"%s\" -ZoneName \"%s\" -AllowUpdateAny -AgeRecord -PtrDomainName \"%s\"",
@@ -252,12 +252,12 @@ func (c *Communicator) AddDNSRecordPTR(zone string, ip net.IP, name string, ptrA
 	if exitCode != 0 {
 		return &WinrmError{exitCode, "Cannot add PTR record.", stderr}
 	}
-	
+
 	return nil
 }
 
 func (c *Communicator) RemoveDNSRecordPTR(ptrArr []string, lastByteArr []string) error {
-	
+
 	for i, j := 0, len(ptrArr)-1; i < j; i, j = i+1, j-1 {
 		ptrArr[i], ptrArr[j] = ptrArr[j], ptrArr[i]
 	}
@@ -266,9 +266,9 @@ func (c *Communicator) RemoveDNSRecordPTR(ptrArr []string, lastByteArr []string)
 		lastByteArr[i], lastByteArr[j] = lastByteArr[j], lastByteArr[i]
 	}
 
-	name := strings.Join(lastByteArr,".")
+	name := strings.Join(lastByteArr, ".")
 
-	zonename := strings.Join(ptrArr,".") + ".in-addr.arpa"
+	zonename := strings.Join(ptrArr, ".") + ".in-addr.arpa"
 
 	command := fmt.Sprintf(
 		"Remove-DnsServerResourceRecord -ZoneName \"%s\" -RRType Ptr -Name \"%s\" -Force",

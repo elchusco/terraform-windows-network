@@ -7,7 +7,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // https://docs.microsoft.com/en-us/powershell/module/dhcpserver/Add-DhcpServerv4Filter?view=win10-ps

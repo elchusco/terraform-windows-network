@@ -2,17 +2,19 @@ package main
 
 import (
 	"errors"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"net"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceDHCPReservation() *schema.Resource {
 	return &schema.Resource{
 		Create: CreateDHCPReservation,
-		Delete: DeleteDHCPReservation,
 		Read:   ReadDHCPReservation,
 		Update: UpdateDHCPReservation,
+		Delete: DeleteDHCPReservation,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"mac": &schema.Schema{

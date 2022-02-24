@@ -2,19 +2,21 @@ package main
 
 import (
 	"errors"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"net"
 	"strings"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceRecordA() *schema.Resource {
 	return &schema.Resource{
 		Create: createRecordA,
-		Delete: deleteRecordA,
 		Read:   readRecordA,
 		Update: updateRecordA,
+		Delete: deleteRecordA,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

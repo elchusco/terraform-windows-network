@@ -4,10 +4,9 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"net"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // https://docs.microsoft.com/en-us/powershell/module/dhcpserver/Add-DhcpServerv4Filter?view=win10-ps
@@ -18,6 +17,9 @@ func resourceMacAllow() *schema.Resource {
 		Read:   resourceServerRead,
 		Update: resourceServerUpdate,
 		Delete: resourceServerDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"mac": &schema.Schema{

@@ -42,6 +42,7 @@ func Provider() *schema.Provider {
 			"windowsnetwork_dhcp_mac_allowed": resourceMacAllow(),
 			"windowsnetwork_dhcp_reservation": resourceDHCPReservation(),
 			"windowsnetwork_dns_record_a":     resourceRecordA(),
+			"windowsnetwork_dns_record_cname":     resourceRecordCname(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

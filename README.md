@@ -77,3 +77,19 @@ resource "windowsnetwork_dns_record_a" "www" {
     ip = "192.168.168.5"
 }
 ```
+
+### windowsnetwork_dns_record_cname
+
+| Argument | Required | Definition                    |
+| -------- | -------- | ----------------------------- |
+| name     | Yes      | The record's name             |
+| alias    | Yes      | The record's CNAME alias name |
+| zone     | Yes      | The record's zone             |
+
+```hcl
+resource "windowsnetwork_dns_record_cname" "host1-www" {
+    name = "host1.www"
+    zone = "example.com"
+    alias = "www.example.com"
+}
+```

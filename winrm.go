@@ -48,7 +48,7 @@ func (c *Communicator) Connect() error {
 
 func (c *Communicator) AddFilterAllowAddress(mac string, description string) error {
 	command := fmt.Sprintf(
-		"Add-DhcpServerv4Filter -List Allow -macAddress \"%s\" -Description \"%s\" -Force",
+		"Add-DhcpServerv4Filter -List Allow -MacAddress \"%s\" -Description \"%s\" -Force",
 		mac,
 		description,
 	)
@@ -164,14 +164,60 @@ func (c *Communicator) GetFreeIp(scopeId string) (net.IP, error) {
 
 func (c *Communicator) AddDNSRecordA(zone string, ip net.IP, name string) error {
 	command := fmt.Sprintf(
-		"Add-DnsServerResourceRecordA -name \"%s\" -zonename \"%s\" -allowupdateany -ipv4address \"%s\"",
+		"Add-DnsServerResourceRecordA -Name \"%s\" -ZoneName \"%s\" -AllowUpdateAny -IPv4Address \"%s\"",
 		name, zone, ip.String(),
 	)
 
 	_, stderr, exitCode := c.Execute(command)
 
 	if exitCode != 0 {
-		return &WinrmError{exitCode, "Cannot add record A.", stderr}
+		return &WinrmError{exitCode, "Cannot add A record.", stderr}
+	}
+
+	return nil
+}
+
+func (c *Communicator) AddDNSRecordCname(zone string, alias string, name string) error {
+	command := fmt.Sprintf(
+		"Add-DnsServerResourceRecordCname -Name \"%s\" -ZoneName \"%s\" -AllowUpdateAny -HostNameAlias \"%s\"",
+		name, zone, alias,
+	)
+
+	_, stderr, exitCode := c.Execute(command)
+
+	if exitCode != 0 {
+		return &WinrmError{exitCode, "Cannot add CNAME record.", stderr}
+	}
+
+	return nil
+}
+
+
+func (c *Communicator) RemoveDNSRecordA(zone string, ip net.IP, name string) error {
+	command := fmt.Sprintf(
+		"Remove-DnsServerResourceRecord -ZoneName \"%s\" -RRType A -Name \"%s\" -RecordData \"%s\" -Force",
+		zone, name, ip.String(),
+	)
+	
+	_, stderr, exitCode := c.Execute(command)
+	
+	if exitCode != 0 {
+		return &WinrmError{exitCode, "Cannot remove A record.", stderr}
+	}
+
+	return nil
+}
+
+func (c *Communicator) RemoveDNSRecordCname(zone string, alias string, name string) error {
+	command := fmt.Sprintf(
+		"Remove-DnsServerResourceRecord -ZoneName \"%s\" -RRType Cname -Name \"%s\" -RecordData \"%s\" -Force",
+		zone, name, alias,
+	)
+	
+	_, stderr, exitCode := c.Execute(command)
+	
+	if exitCode != 0 {
+		return &WinrmError{exitCode, "Cannot remove CNAME record.", stderr}
 	}
 
 	return nil
@@ -194,7 +240,7 @@ func (c *Communicator) AddDNSRecordPTR(zone string, ip net.IP, name string, ptrA
 	zonename := strings.Join(ptrArr,".") + ".in-addr.arpa"
 
 	command := fmt.Sprintf(
-		"Add-DnsServerResourceRecordPtr -name \"%s\" -zonename \"%s\" -allowupdateany -AgeRecord -PtrDomainName \"%s\"",
+		"Add-DnsServerResourceRecordPtr -Name \"%s\" -ZoneName \"%s\" -AllowUpdateAny -AgeRecord -PtrDomainName \"%s\"",
 		lastByte, zonename, ptrdomainname,
 	)
 
@@ -204,20 +250,9 @@ func (c *Communicator) AddDNSRecordPTR(zone string, ip net.IP, name string, ptrA
 	log.Printf(stderr)
 
 	if exitCode != 0 {
-		return &WinrmError{exitCode, "Cannot add record PTR.", stderr}
+		return &WinrmError{exitCode, "Cannot add PTR record.", stderr}
 	}
 	
-	return nil
-}
-
-func (c *Communicator) RemoveDNSRecordA(zone string, ip net.IP, name string) error {
-	command := fmt.Sprintf(
-		"Remove-DnsServerResourceRecord -zonename \"%s\" -RRType A -Name \"%s\" -RecordData \"%s\" -Force",
-		zone, name, ip.String(),
-	)
-
-	c.Execute(command)
-
 	return nil
 }
 
@@ -236,7 +271,7 @@ func (c *Communicator) RemoveDNSRecordPTR(ptrArr []string, lastByteArr []string)
 	zonename := strings.Join(ptrArr,".") + ".in-addr.arpa"
 
 	command := fmt.Sprintf(
-		"Remove-DnsServerResourceRecord -zonename \"%s\" -RRType Ptr -Name \"%s\" -Force",
+		"Remove-DnsServerResourceRecord -ZoneName \"%s\" -RRType Ptr -Name \"%s\" -Force",
 		zonename, name,
 	)
 

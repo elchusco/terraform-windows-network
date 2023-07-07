@@ -39,7 +39,7 @@ func resourceRecordA() *schema.Resource {
 
 func createRecordA(d *schema.ResourceData, m interface{}) error {
 
-	log.Printf("[DEBUG] validate a ip address")
+	log.Printf("[DEBUG] validate an ip address")
 	ip := net.ParseIP(d.Get("ip").(string))
 
 	if ip == nil {
@@ -58,7 +58,7 @@ func createRecordA(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.SetId("A_z:" + zone + "_n:" + name + "_ip:" + ip.String())	
+	d.SetId("A_z:" + zone + "_n:" + name + "_ip:" + ip.String())
 
 	ptr := d.Get("ptr").(string)
 

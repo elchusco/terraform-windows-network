@@ -1,4 +1,4 @@
-module github.com/mazenovi/windowsnetwork
+module github.com/elchusco/windowsnetwork
 
 go 1.17
 

@@ -1,11 +1,7 @@
 package main
 
 import (
-	"errors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
-	"net"
-	"strings"
 )
 
 func resourceRecordCname() *schema.Resource {

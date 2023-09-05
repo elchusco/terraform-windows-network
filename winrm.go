@@ -120,7 +120,7 @@ func (c *Communicator) RemoveDHCPReservation(mac string, scopeId string) error {
 
 func (c *Communicator) RemoveDHCPLease(scopeId string, mac string, ip string) error {
 	command := fmt.Sprintf(
-		"Remove-DhcpServerv4Lease -ScopeId %s -ClientId \"%s\" -IPAddress %s",
+		"Remove-DhcpServerv4Lease -IPAddress %s",
 		scopeId, mac, ip,
 	)
 
